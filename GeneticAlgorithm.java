@@ -1,9 +1,9 @@
-package StringGenetics;
+
 
 public class GeneticAlgorithm {
 
 	// The target phrase
-	public static final String TARGET_PHRASE = "I love you <3";
+	public static final String TARGET_PHRASE = "Manulife";
 
 	// The number of random elements being created
 	public static final int POPULATION_SIZE = 8;

@@ -1,4 +1,4 @@
-package StringGenetics;
+
 
 public class Phrase {
 

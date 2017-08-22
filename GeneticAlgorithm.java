@@ -1,23 +1,26 @@
+package Genetics;
 
+import java.util.ArrayList;
 
 public class GeneticAlgorithm {
 
 	// The target phrase
-	public static final String TARGET_PHRASE = "Manulife";
-
+	public static final String TARGET_PHRASE = "Good, better, best. Never let it rest. 'Til your good is better and your better is best.";
+ 
+ 
 	// The number of random elements being created
-	public static final int POPULATION_SIZE = 8;
+	public static final int POPULATION_SIZE =(int) (TARGET_PHRASE.length()*0.80);
 
 	// number of characters guaranteed to be passed on to the next generation
 	public static final int NUM_OF_ELITE_CHARACTERS = 1;
 
 	// The amount of words chosen to pass on their genes / characteristics
-	public static final int TOURNAMENT_SELECTION_SIZE = TARGET_PHRASE.length() / 2;
+	public static final int TOURNAMENT_SELECTION_SIZE = POPULATION_SIZE/2;
 
 	// Chance of random mutation in a gene
-	public static final double MUTATION_RATE = 0.10;
+	public static final double MUTATION_RATE = 0.01;
 
-	private String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz?!.,';#~<>1234567890-";
+	private String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz?!.,';#~<>1234567890-()";
 
 	/**
 	 * Implements random evolution into the population
@@ -82,11 +85,27 @@ public class GeneticAlgorithm {
 	private Population selectTournamentPopulation(Population population) {
 
 		Population tournamentPopulation = new Population(TOURNAMENT_SELECTION_SIZE);
-
-		// Pick up number of chromosomes randomly
+		ArrayList <Phrase> candidates = new ArrayList<Phrase>();
+		
+		//Go through each phrase in the population
+		for(int i =0; i< population.getPhrases().length;i++){
+			
+			Phrase currPhrase = population.getPhrases()[i];
+			//add the phrase to the Candidates array the number of times equal to its fitness
+			//If the fitness is 0 or 1, add it only once
+			if(currPhrase.getFitness()==0 || currPhrase.getFitness()==1){
+				candidates.add(currPhrase);
+			}
+			else{
+				for(int j =0; j< currPhrase.getFitness();j++)
+					candidates.add(currPhrase);				
+			}			
+		}
+		
+		// Pick up number of chromosomes randomly from candidates
 		for (int x = 0; x < TOURNAMENT_SELECTION_SIZE; x++) {
-			tournamentPopulation.getPhrases()[x] = population
-					.getPhrases()[(int) (Math.random() * population.getPhrases().length)];
+			tournamentPopulation.getPhrases()[x] = candidates
+					.get((int) (Math.random() * candidates.size()));
 		}
 
 		// Sort

@@ -1,9 +1,10 @@
+package Genetics;
 
 
 public class Phrase {
 
 	private char[] letters;
-	private String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz?!.,';#~<>1234567890-";
+	private String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz?!.,';#~<>1234567890-()";
 	private int fitness=0;
 	private boolean isFitnessChanged= true;
 	

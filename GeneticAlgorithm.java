@@ -5,20 +5,19 @@ import java.util.ArrayList;
 public class GeneticAlgorithm {
 
 	// The target phrase
-	public static final String TARGET_PHRASE = "Good, better, best. Never let it rest. 'Til your good is better and your better is best.";
- 
- 
+	public static final String TARGET_PHRASE = "In computer science and operations research, a genetic algorithm is a metaheuristic inspired by the process of natural selection that belongs to the larger class of evolutionary algorithms.";
+
 	// The number of random elements being created
-	public static final int POPULATION_SIZE =(int) (TARGET_PHRASE.length()*0.80);
+	public static final int POPULATION_SIZE = TARGET_PHRASE.length();
 
 	// number of characters guaranteed to be passed on to the next generation
 	public static final int NUM_OF_ELITE_CHARACTERS = 1;
 
 	// The amount of words chosen to pass on their genes / characteristics
-	public static final int TOURNAMENT_SELECTION_SIZE = POPULATION_SIZE/2;
+	public static final int TOURNAMENT_SELECTION_SIZE = POPULATION_SIZE / 4;
 
 	// Chance of random mutation in a gene
-	public static final double MUTATION_RATE = 0.01;
+	public static final double MUTATION_RATE = 0.03;
 
 	private String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz?!.,';#~<>1234567890-()";
 
@@ -68,10 +67,23 @@ public class GeneticAlgorithm {
 		// Randomly takes a letter from one of the two parents at index i and
 		// assigns it the to new word at the same index
 		for (int i = 0; i < phrase1.getLetters().length; i++) {
-			if (Math.random() <= 0.5)
+
+			//If the first word has the correct letter at index i, add it
+			if (phrase1.getLetters()[i] == TARGET_PHRASE.charAt(i)) {
 				crossOverChromosome.getLetters()[i] = phrase1.getLetters()[i];
-			else
+				
+			//If the second word has the correct letter at index i, add it
+			} else if (phrase2.getLetters()[i] == TARGET_PHRASE.charAt(i)) {
 				crossOverChromosome.getLetters()[i] = phrase2.getLetters()[i];
+				
+			} else {
+				// Randomly takes a letter from one of the two parents at index i and
+				// assigns it the to new word at the same index
+				if (Math.random() <= 0.5)
+					crossOverChromosome.getLetters()[i] = phrase1.getLetters()[i];
+				else
+					crossOverChromosome.getLetters()[i] = phrase2.getLetters()[i];
+			}
 		}
 		return crossOverChromosome;
 	}
@@ -85,27 +97,26 @@ public class GeneticAlgorithm {
 	private Population selectTournamentPopulation(Population population) {
 
 		Population tournamentPopulation = new Population(TOURNAMENT_SELECTION_SIZE);
-		ArrayList <Phrase> candidates = new ArrayList<Phrase>();
-		
-		//Go through each phrase in the population
-		for(int i =0; i< population.getPhrases().length;i++){
-			
+		ArrayList<Phrase> candidates = new ArrayList<Phrase>();
+
+		// Go through each phrase in the population
+		for (int i = 0; i < population.getPhrases().length; i++) {
+
 			Phrase currPhrase = population.getPhrases()[i];
-			//add the phrase to the Candidates array the number of times equal to its fitness
-			//If the fitness is 0 or 1, add it only once
-			if(currPhrase.getFitness()==0 || currPhrase.getFitness()==1){
+			// add the phrase to the Candidates array the number of times equal
+			// to its fitness
+			// If the fitness is 0 or 1, add it only once
+			if (currPhrase.getFitness() == 0 || currPhrase.getFitness() == 1) {
 				candidates.add(currPhrase);
+			} else {
+				for (int j = 0; j < currPhrase.getFitness(); j++)
+					candidates.add(currPhrase);
 			}
-			else{
-				for(int j =0; j< currPhrase.getFitness();j++)
-					candidates.add(currPhrase);				
-			}			
 		}
-		
+
 		// Pick up number of chromosomes randomly from candidates
 		for (int x = 0; x < TOURNAMENT_SELECTION_SIZE; x++) {
-			tournamentPopulation.getPhrases()[x] = candidates
-					.get((int) (Math.random() * candidates.size()));
+			tournamentPopulation.getPhrases()[x] = candidates.get((int) (Math.random() * candidates.size()));
 		}
 
 		// Sort
